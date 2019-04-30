@@ -120,11 +120,14 @@ public class PurchaseController {
 			pageSize=page.getPageSize();
 		}
 		page.setPageUnit(pageUnit);
+		page.setPageSize(pageSize);
+		
 		search.setPageSize(pageSize);
 		
 		User user=(User)session.getAttribute("user");
 		Map<String, Object> map=purchaseService.getPurchaseList(search, user.getUserId());
 		System.out.println("purchaseService ³¡");
+		
 		Page resultPage = new Page(search.getCurrentPage(), ((Integer) map.get("totalCount")).intValue(),
 									page.getPageUnit(), page.getPageSize());
 		
@@ -189,6 +192,7 @@ public class PurchaseController {
 		
 		Map<String, Object> map=productService.getProduct(prodNo);
 		product=(Product)map.get("product");
+		
 		
 		purchase.setPurchaseProd(product);
 		purchase.setTranCode(tranCode);
