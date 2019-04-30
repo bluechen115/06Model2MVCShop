@@ -49,13 +49,13 @@
 						u.user_id=tr.buyer_id 
 						AND pd.prod_no=tr.prod_no
 						AND u.user_id=#{buyerId}
-						<if test="searchCondition != null and searchCondition == '0'">
+						<if test='searchCondition != null and searchCondition == "0"'>
 					 		AND tr.prod_no=#{search.searchKeyword}
 						</if>
-						<if test="searchCondition != null and searchCondition == '1'">
+						<if test='searchCondition != null and searchCondition == "1"'>
 				 			AND pd.prod_name=#{search.searchKeyword}
 						</if>
-						<if test="searchCondition != null and searchCondition == '2'">
+						<if test='searchCondition != null and searchCondition == "2"'>
 				 			AND pd.price=#{search.searchKeyword}
 						</if>
 						</where>
@@ -84,12 +84,12 @@
 	<update id="updateTranCode" parameterType="purchase">
 		UPDATE TRANSACTION SET tran_status_code=#{tranCode}
 		<where>
-			<if test="tranNo &gt;= 0">
+			<if test="tranNo != 0">
 				tran_no=#{tranNo}
 			</if>
-			<!-- <if test="tranNo == null AND purchaseProd.prodNo &gt;= 0">
+			<if test="tranNo == null AND purchaseProd.prodNo &gt;= 0">
 				prod_no=#{prodNo}
-			</if> -->
+			</if>
 		</where>
 	</update>
 	
@@ -101,13 +101,13 @@
 						u.user_id=tr.buyer_id 
 						AND pd.prod_no=tr.prod_no
 						AND u.user_id=#{buyerId}
-						<if test="searchCondition != null and searchCondition == '0'">
+						<if test='searchCondition != null and searchCondition == "0"'>
 					 		AND tr.prod_no=#{search.searchKeyword}
 						</if>
-						<if test="searchCondition != null and searchCondition == '1'">
+						<if test='searchCondition != null and searchCondition == "1"'>
 				 			AND pd.prod_name=#{search.searchKeyword}
 						</if>
-						<if test="searchCondition != null and searchCondition == '2'">
+						<if test='searchCondition != null and searchCondition == "2"'>
 				 			AND pd.price=#{search.searchKeyword}
 						</if>
 						</where>

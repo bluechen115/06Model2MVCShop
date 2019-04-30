@@ -104,7 +104,7 @@ public class ProductController {
 									@ModelAttribute("page") Page page,
 									@RequestParam("menu") String menu,
 									Model model) throws Exception {
-		System.out.println("/listProduct.do 시작");
+		System.out.println("/listProduct.do");
 		
 		page.setPageUnit(pageUnit);
 		
@@ -125,26 +125,15 @@ public class ProductController {
 		
 		search.setPageSize(page.getPageSize());
 		
-		System.out.println("productService 시작");
-		System.out.println("order Type :: "+search.getOrderType());
 		Map<String,Object> map=productService.getProductList(search);
-		System.out.println("productService 끝");
 		
-		System.out.println("Page 시작");
-		System.out.println("CurrentPage :: "+search.getCurrentPage()+", totalCount :: "+((Integer)map.get("totalCount")).intValue()
-								+", pageUnit :: "+page.getPageUnit()+", pageSize :: "+page.getPageSize());
 		Page resultPage=new Page(search.getCurrentPage(),((Integer)map.get("totalCount")).intValue(), page.getPageUnit(), page.getPageSize());
-		System.out.println("ListUserAction ::"+resultPage);
-		System.out.println("Page 끝");
-		
-		System.out.println("model 시작");
+
 		model.addAttribute("list", map.get("list"));
 		model.addAttribute("discount", map.get("discount"));
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);
-		System.out.println("model 끝");
-		
-		System.out.println("/listProduct.do 끝");
+
 		return "forward:/product/listProduct.jsp";
 		
 	}
@@ -153,6 +142,7 @@ public class ProductController {
 	public String updateProduct(@ModelAttribute("product") Product product,
 									Model model) throws Exception{
 		
+		System.out.println("/updateProduct.do");
 		ProductService productService=new ProductServiceImpl();
 		productService.updateProduct(product);
 		

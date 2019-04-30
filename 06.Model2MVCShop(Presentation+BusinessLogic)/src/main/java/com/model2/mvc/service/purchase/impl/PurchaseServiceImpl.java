@@ -1,5 +1,6 @@
 package com.model2.mvc.service.purchase.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,15 +12,21 @@ import org.springframework.stereotype.Service;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Code;
 import com.model2.mvc.service.domain.Purchase;
+import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.purchase.PurchaseDao;
 import com.model2.mvc.service.purchase.PurchaseService;
+import com.model2.mvc.service.user.UserDao;
 
 @Service("purchaseServiceImpl")
 public class PurchaseServiceImpl implements PurchaseService {
 
 	@Autowired
 	@Qualifier("purchaseDaoImpl")
-	private PurchaseDao purchaseDao; 
+	private PurchaseDao purchaseDao;
+	
+	@Autowired
+	@Qualifier("userDaoImpl")
+	private UserDao userDao;
 	
 	public PurchaseServiceImpl() {
 	}
@@ -39,13 +46,27 @@ public class PurchaseServiceImpl implements PurchaseService {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("search", search);
 		map.put("buyerId", buyerId);
-		List<Purchase> list = purchaseDao.getPurchaseList(map);
+		List<Purchase> purchaseList = purchaseDao.getPurchaseList(map);
+		for(int i=0;i<purchaseList.size();i++) {
+			System.out.println(purchaseList.get(i).getTranNo());
+		}
+		
+		
+		List<Code> codeList=purchaseDao.codeCall("tr01");
 		int totalCount = purchaseDao.getgetTotalCount(map);
+		
+		List<User> userList=new ArrayList<User>();
+		for(int i=0;i<purchaseList.size();i++) {
+			buyerId=purchaseList.get(i).getBuyer().getUserId();
+			userList.add(userDao.getUser(buyerId));
+		}
 		
 		map=new HashMap<String,Object>();
 		
-		map.put("list", list);
+		map.put("purchaseList", purchaseList);
+		map.put("userList", userList);
 		map.put("totalCount", totalCount);
+		map.put("codeList", codeList);
 		
 		return map;
 	}

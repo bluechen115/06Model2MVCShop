@@ -32,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
 	public Map<String, Object> getProduct(int prodNo) throws Exception {
 		Map<String, Object> map=new HashMap<String,Object>();
 		map.put("product", productDao.findProduct(prodNo));
+		map.put("discount", productDao.selectDiscountProd());
 		return map;
 	}
 
