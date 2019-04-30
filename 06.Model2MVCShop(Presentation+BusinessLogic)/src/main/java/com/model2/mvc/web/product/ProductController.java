@@ -43,8 +43,7 @@ public class ProductController {
 	int pageSize;
 	
 	@RequestMapping("/addProduct.do")
-	public String addProduct(@ModelAttribute("product")Product product,
-								@RequestParam("menu") String menu) throws Exception{
+	public String addProduct(@ModelAttribute("product")Product product) throws Exception{
 		System.out.println("/addProduct.do");
 		
 		productService.addProduct(product);
@@ -120,7 +119,7 @@ public class ProductController {
 				System.out.println("GET방식으로 실행");
 			}else {
 				search.setSearchKeyword(search.getSearchKeyword());
-				System.out.println("POST방식으로 실행");
+				System.out.println("POST방식으로 실행, SearchKeyword :: "+search.getSearchKeyword());
 			}
 		}
 		

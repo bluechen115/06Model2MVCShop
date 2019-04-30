@@ -38,13 +38,13 @@
 					<where>
 					p.prod_no=tr.prod_no(+) 
 						<if test='searchCondition != null and searchCondition == "0"'>
-							AND p.prod_no LIKE ('%' || #{SearchKeyword} || '%')
+							AND p.prod_no LIKE ('%' || #{searchKeyword} || '%')
 						</if>
 						<if test='searchCondition != null and searchCondition == "1"'>
-							AND UPPER(p.prod_name) LIKE UPPER('%' || #{SearchKeyword} || '%')
+							AND UPPER(p.prod_name) LIKE UPPER('%' || #{searchKeyword} || '%')
 						</if>
 						<if test='searchCondition != null and searchCondition == "2"'>
-							AND p.price LIKE ('%' || #{SearchKeyword} || '%')
+							AND p.price LIKE ('%' || #{searchKeyword} || '%')
 						</if>
 					</where>
 						<if test='orderType != null and orderType == "1"'>
@@ -87,13 +87,13 @@
 				<where>
 				p.prod_no=tr.prod_no(+)
 					<if test='searchCondition != null and searchCondition == "0"'>
-							AND p.prod_no LIKE ('%' || #{SearchKeyword} || '%')
+							AND p.prod_no LIKE ('%' || #{searchKeyword} || '%')
 						</if>
 						<if test='searchCondition != null and searchCondition == "1"'>
-							AND UPPER(p.prod_name) LIKE UPPER('%' || #{SearchKeyword} || '%')
+							AND UPPER(p.prod_name) LIKE UPPER('%' || #{searchKeyword} || '%')
 						</if>
 						<if test='searchCondition != null and searchCondition == "2"'>
-							AND p.price LIKE ('%' || #{SearchKeyword} || '%')
+							AND p.price LIKE ('%' || #{searchKeyword} || '%')
 						</if>
 				</where>
 				) countTable
