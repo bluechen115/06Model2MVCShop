@@ -60,4 +60,9 @@ public class PurchaseDaoImpl implements PurchaseDao {
 		return sqlSession.selectList("PurchaseMapper.codeCall", groupId);
 	}
 
+	@Override
+	public int getCountPurchase(String buyerId) throws Exception {
+		return sqlSession.selectOne("PurchaseMapper.getCountPurchase", buyerId);
+	}
+
 }

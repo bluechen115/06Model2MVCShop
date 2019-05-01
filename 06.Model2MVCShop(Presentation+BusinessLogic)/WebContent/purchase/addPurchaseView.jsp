@@ -109,24 +109,24 @@ function fncAddPurchase() {
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>
 	</tr>
 	<tr>
-		<td width="104" class="ct_write">가격
+		<td width="104" class="ct_write">가격 
 		<c:if test="${product.prodNo == discount.discountProd}">
 			<img src="https://static1.squarespace.com/static/513f57ebe4b0970eaf232dec/t/5654b2eae4b05e28e38285cd/1448391403995/" 
 											style="height:20px;width:20px;">
 		</c:if>
 		</td>
 		<td bgcolor="D6D6D6" width="1"></td>
-		<c:if test="${product.prodNo==discount.discountProd}">
+		<c:choose>
+			<c:when test="${product.prodNo==discount.discountProd || purchaseCount % 4 == 0}">
 				<td class="ct_write01"><strike>${product.price}</strike>
 				&nbsp;&nbsp;
-				<fmt:parseNumber var="resultPrice" value="${product.price*0.75}" integerOnly="true"/>
-					${resultPrice}
+					${product.resultPrice}
 				</td>
-		</c:if>
-		<c:if test="${product.prodNo!=discount.discountProd}">
-			<td class="ct_write01">${product.price}</td>
-		</c:if>
-		
+			</c:when>
+			<c:otherwise>
+				<td class="ct_write01">${product.resultPrice}</td>
+			</c:otherwise>
+		</c:choose> 
 	</tr>
 	<tr>
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>

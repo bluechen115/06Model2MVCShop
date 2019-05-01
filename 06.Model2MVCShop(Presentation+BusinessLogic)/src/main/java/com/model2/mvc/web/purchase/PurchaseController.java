@@ -61,9 +61,13 @@ public class PurchaseController {
 		Product product=(Product)map.get("product");
 		Discount discount=(Discount)map.get("discount");
 		
+		int purchaseCount = purchaseService.getCountPurchase(user.getUserId());
 		int price=product.getPrice();
 		if(product.getProdNo()==discount.getDiscountProd()) {
 			price=(int)(product.getPrice()*0.75);
+		}
+		if(purchaseCount % 4 == 0) {
+			price=(int)(price*0.9);
 		}
 		
 		purchase.setBuyer(user);
@@ -90,9 +94,21 @@ public class PurchaseController {
 		Product product=(Product)map.get("product");
 		Discount discount=(Discount)map.get("discount");
 		
+		int purchaseCount = purchaseService.getCountPurchase(user.getUserId());
+		int price=product.getPrice();
+		if(product.getProdNo()==discount.getDiscountProd()) {
+			price=(int)(product.getPrice()*0.75);
+		}
+		if(purchaseCount % 4 == 0) {
+			price=(int)(price*0.9);
+		}
+		
+		product.setResultPrice(price);
+		
 		model.addAttribute("user", user);
 		model.addAttribute("product", product);
 		model.addAttribute("discount", discount);
+		model.addAttribute("purchaseCount", purchaseCount);
 		
 		return "forward:/purchase/addPurchaseView.jsp";
 	}
@@ -103,7 +119,7 @@ public class PurchaseController {
 		
 		Purchase purchase=purchaseService.getPurchase(tranNo);
 		User user=userService.getUser(purchase.getBuyer().getUserId());
-		
+
 		model.addAttribute("purchase", purchase);
 		model.addAttribute("user", user);
 		

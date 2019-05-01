@@ -130,13 +130,27 @@
 			</c:if>
 		</td>
 		<td bgcolor="D6D6D6" width="1"></td>
-			<c:if test="${product.prodNo==discount.discountProd}">
+			<%-- <c:if test="${product.prodNo==discount.discountProd}">
 				<td class="ct_write01"><strike>${product.price}</strike>
 				&nbsp;&nbsp;
 				<fmt:parseNumber var="resultPrice" value="${product.price*0.75}" integerOnly="true"/>
 					${resultPrice}
 				</td>
 			</c:if>
+			<td class="ct_write01">${product.price}
+					${resultPrice}
+				</td> --%>
+			<c:choose>
+				<c:when test="${product.prodNo==discount.discountProd || purchaseCount % 4 == 0}">
+					<td class="ct_write01"><strike>${product.price}</strike>
+					&nbsp;&nbsp;
+						${product.resultPrice}
+					</td>
+				</c:when>
+				<c:otherwise>
+					<td class="ct_write01">${product.resultPrice}</td>
+				</c:otherwise>
+			</c:choose> 
 	</tr>
 	<tr>
 		<td height="1" colspan="3" bgcolor="D6D6D6"></td>

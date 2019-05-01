@@ -6,22 +6,25 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Discount;
 import com.model2.mvc.service.domain.Product;
+import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
 import com.model2.mvc.service.product.impl.ProductServiceImpl;
+import com.model2.mvc.service.purchase.PurchaseService;
 
 @Controller
 public class ProductController {
@@ -29,6 +32,10 @@ public class ProductController {
 	@Autowired
 	@Qualifier("productServiceImpl")
 	private ProductService productService;
+	
+	@Autowired
+	@Qualifier("purchaseServiceImpl")
+	private PurchaseService purchaseService;
 
 	public ProductController() {
 		System.out.println(this.getClass());
@@ -43,21 +50,28 @@ public class ProductController {
 	int pageSize;
 	
 	@RequestMapping("/addProduct.do")
-	public String addProduct(@ModelAttribute("product")Product product) throws Exception{
+	public ModelAndView addProduct(@ModelAttribute("product")Product product) throws Exception{
 		System.out.println("/addProduct.do");
 		
 		productService.addProduct(product);
 		
-		return "forward:/product/successAddProduct.jsp";
+		ModelAndView modelAndView=new ModelAndView();
+		modelAndView.setViewName("forward:/product/successAddProduct.jsp");
+		
+		return modelAndView;
 	}
 	
 	@RequestMapping("/getProduct.do")
-	public String getProduct(@RequestParam("prodNo") int prodNo,
+	public ModelAndView getProduct(@RequestParam("prodNo") int prodNo,
 								@RequestParam("menu") String menu,
 								HttpServletRequest request,
 								HttpServletResponse response,
-								Model model) throws Exception{
+								HttpSession session
+								) throws Exception{
 		System.out.println("/getProduct.do");
+		
+		User user=(User)session.getAttribute("user");
+		
 		if(menu.equals("search")) {
 			productService.plusViewCount(prodNo);
 		}
@@ -65,6 +79,17 @@ public class ProductController {
 		Map<String,Object> map=productService.getProduct(prodNo);
 		Product product = (Product)map.get("product");
 		Discount discount = (Discount)map.get("discount");
+		
+		int purchaseCount = purchaseService.getCountPurchase(user.getUserId());
+		int price=product.getPrice();
+		if(product.getProdNo()==discount.getDiscountProd()) {
+			price=(int)(product.getPrice()*0.75);
+		}
+		if(purchaseCount % 4 == 0) {
+			price=(int)(price*0.9);
+		}
+		
+		product.setResultPrice(price);
 		
 		//////////////Cookie//////////////////
 		Cookie[] cookies = request.getCookies();
@@ -85,25 +110,30 @@ public class ProductController {
 			response.addCookie(new Cookie("history", String.valueOf(product.getProdNo())));
 		}
 		//////////////Cookie//////////////////
-		
-		model.addAttribute("product", product);
-		model.addAttribute("discount", discount);
-		
+		String viewName="";
 		if (menu != null) {
 			if (menu.equals("search")) {
-				return "forward:/product/getProduct.jsp";
+				viewName= "forward:/product/getProduct.jsp";
+			}else {
+				viewName="forward:/product/updateProductView.jsp";
 			}
 		}
 
-		return "forward:/product/updateProductView.jsp";
+		ModelAndView modelAndView=new ModelAndView();
+		modelAndView.setViewName(viewName);
+		modelAndView.addObject("product", product);
+		modelAndView.addObject("discount", discount);
+		modelAndView.addObject("purchaseCount", purchaseCount);
+		
+		return modelAndView;
 	}
 	
 	@RequestMapping("/listProduct.do")
-	public String getListProduct(HttpServletRequest request,
+	public ModelAndView getListProduct(HttpServletRequest request,
 									@ModelAttribute("search") Search search,
 									@ModelAttribute("page") Page page,
-									@RequestParam("menu") String menu,
-									Model model) throws Exception {
+									@RequestParam("menu") String menu
+									) throws Exception {
 		System.out.println("/listProduct.do");
 		
 		page.setPageUnit(pageUnit);
@@ -129,18 +159,19 @@ public class ProductController {
 		
 		Page resultPage=new Page(search.getCurrentPage(),((Integer)map.get("totalCount")).intValue(), page.getPageUnit(), page.getPageSize());
 
-		model.addAttribute("list", map.get("list"));
-		model.addAttribute("discount", map.get("discount"));
-		model.addAttribute("resultPage", resultPage);
-		model.addAttribute("search", search);
-
-		return "forward:/product/listProduct.jsp";
+		ModelAndView modelAndView=new ModelAndView();
+		modelAndView.addObject("list", map.get("list"));
+		modelAndView.addObject("discount", map.get("discount"));
+		modelAndView.addObject("resultPage", resultPage);
+		modelAndView.addObject("search", search);
+		modelAndView.setViewName("forward:/product/listProduct.jsp");
+		
+		return modelAndView;
 		
 	}
 	
 	@RequestMapping("/updateProduct.do")
-	public String updateProduct(@ModelAttribute("product") Product product,
-									Model model) throws Exception{
+	public ModelAndView updateProduct(@ModelAttribute("product") Product product) throws Exception{
 		
 		System.out.println("/updateProduct.do");
 		ProductService productService=new ProductServiceImpl();
@@ -149,7 +180,10 @@ public class ProductController {
 		Map<String,Object> map=productService.getProduct(product.getProdNo());
 		product = (Product)map.get("product");
 		
-		return "forward:/product/getProduct.jsp";
+		ModelAndView modelAndView=new ModelAndView();
+		modelAndView.setViewName("forward:/product/getProduct.jsp");
+		
+		return modelAndView;
 	}
 	
 	

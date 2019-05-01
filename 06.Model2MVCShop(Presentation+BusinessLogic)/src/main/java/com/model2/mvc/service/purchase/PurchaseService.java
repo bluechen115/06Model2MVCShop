@@ -21,4 +21,6 @@ public interface PurchaseService {
 	
 	public List<Code> codeCall(String groupId) throws Exception;
 	
+	public int getCountPurchase(String buyerId) throws Exception;
+	
 }

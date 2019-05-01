@@ -86,4 +86,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 		return purchaseDao.codeCall(groupId);
 	}
 
+	@Override
+	public int getCountPurchase(String buyerId) throws Exception {
+		return purchaseDao.getCountPurchase(buyerId);
+	}
+
 }

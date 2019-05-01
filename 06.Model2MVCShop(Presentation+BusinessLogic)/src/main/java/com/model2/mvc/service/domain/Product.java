@@ -14,6 +14,7 @@ public class Product {
 	private Date regDate;
 	private String proTranCode;
 	private int viewCount;
+	private int resultPrice;
 	
 	public Product(){
 	}
@@ -73,6 +74,14 @@ public class Product {
 
 	public void setViewCount(int viewCount) {
 		this.viewCount = viewCount;
+	}
+
+	public int getResultPrice() {
+		return resultPrice;
+	}
+
+	public void setResultPrice(int resultPrice) {
+		this.resultPrice = resultPrice;
 	}
 
 	// Override

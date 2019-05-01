@@ -20,6 +20,7 @@
 		
 		<association property="buyer" javaType="user">
 			<result property="userId" column="user_id"/>
+			<result property="userId" column="buyer_id"/>
 		</association>
 		<association property="purchaseProd" javaType="product">
 			<result property="prodNo" column="prod_no" jdbcType="NUMERIC"/>
@@ -116,5 +117,15 @@
 	
 	<select id="codeCall" parameterType="String" resultMap="CodeSelectMap">
 		SELECT * FROM CODE WHERE group_id=#{value}
+	</select>
+	
+	<select id="getCountPurchase" parameterType="string" resultType="int">
+		SELECT
+		COUNT(*)
+		FROM TRANSACTION
+		WHERE
+		buyer_id = #{value}
+		AND
+		tran_status_code IN (2,4)
 	</select>
 </mapper>
